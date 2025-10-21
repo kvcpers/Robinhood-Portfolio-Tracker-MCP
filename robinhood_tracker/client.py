@@ -160,4 +160,16 @@ class RobinhoodClient:
     def market_sell(self, symbol: str, quantity: float) -> Dict[str, Any]:
         return self.place_order(symbol, quantity, side="sell")
 
+    def get_options_positions(self) -> Dict[str, Any]:
+        """Get options positions from Robinhood"""
+        return self._get("/options/positions/")
+
+    def get_options_orders(self) -> Dict[str, Any]:
+        """Get options orders from Robinhood"""
+        return self._get("/options/orders/")
+
+    def get_options_instruments(self, symbol: str) -> Dict[str, Any]:
+        """Get options instruments for a symbol"""
+        return self._get("/options/instruments/", params={"equity_instrument": self.get_instrument_by_symbol(symbol)})
+
 

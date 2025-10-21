@@ -1,0 +1,168 @@
+{
+  "mcpServers": {
+    "robinhood": {
+      "command": "python",
+      "args": ["mcp_server.py"],
+      "env": {
+        "API_URL": "http://127.0.0.1:5000"
+      }
+    }
+  },
+  "tools": {
+    "portfolio_management": [
+      {
+        "name": "get_portfolio",
+        "description": "Get current portfolio summary including positions, cash, and total value",
+        "category": "portfolio"
+      },
+      {
+        "name": "get_health",
+        "description": "Check if the Robinhood API server is running and healthy",
+        "category": "system"
+      },
+      {
+        "name": "login",
+        "description": "Login to Robinhood account",
+        "category": "authentication"
+      }
+    ],
+    "trading_operations": [
+      {
+        "name": "buy_stock",
+        "description": "Buy shares of a stock",
+        "category": "trading",
+        "parameters": {
+          "symbol": {"type": "string", "description": "Stock symbol (e.g., AAPL, TSLA)"},
+          "quantity": {"type": "number", "description": "Number of shares to buy"}
+        }
+      },
+      {
+        "name": "sell_stock",
+        "description": "Sell shares of a stock",
+        "category": "trading",
+        "parameters": {
+          "symbol": {"type": "string", "description": "Stock symbol (e.g., AAPL, TSLA)"},
+          "quantity": {"type": "number", "description": "Number of shares to sell"}
+        }
+      },
+      {
+        "name": "rebalance_portfolio",
+        "description": "Rebalance portfolio according to target allocations",
+        "category": "portfolio",
+        "parameters": {
+          "symbols": {"type": "array", "description": "List of stock symbols"},
+          "allocations": {"type": "array", "description": "Target allocation percentages"},
+          "cash_buffer": {"type": "number", "description": "Cash buffer percentage", "default": 2.0}
+        }
+      }
+    ],
+    "trading_bot": [
+      {
+        "name": "get_bot_status",
+        "description": "Get trading bot status and monitored positions",
+        "category": "automation"
+      },
+      {
+        "name": "add_bot_position",
+        "description": "Add a position to trading bot monitoring with stop-loss and take-profit",
+        "category": "automation",
+        "parameters": {
+          "symbol": {"type": "string", "description": "Stock symbol to monitor"},
+          "quantity": {"type": "number", "description": "Number of shares"},
+          "stop_loss": {"type": "number", "description": "Stop loss percentage (e.g., 5 for 5% loss)"},
+          "take_profit": {"type": "number", "description": "Take profit percentage (e.g., 10 for 10% gain)"}
+        }
+      },
+      {
+        "name": "remove_bot_position",
+        "description": "Remove a position from trading bot monitoring",
+        "category": "automation",
+        "parameters": {
+          "symbol": {"type": "string", "description": "Stock symbol to remove from monitoring"}
+        }
+      },
+      {
+        "name": "start_bot",
+        "description": "Start the automated trading bot",
+        "category": "automation",
+        "parameters": {
+          "interval_minutes": {"type": "number", "description": "Check interval in minutes", "default": 5}
+        }
+      },
+      {
+        "name": "stop_bot",
+        "description": "Stop the automated trading bot",
+        "category": "automation"
+      },
+      {
+        "name": "check_bot_positions",
+        "description": "Manually check all bot positions for stop-loss/take-profit triggers",
+        "category": "automation"
+      }
+    ],
+    "options_trading": [
+      {
+        "name": "get_options_positions",
+        "description": "Get current options positions",
+        "category": "options"
+      },
+      {
+        "name": "get_options_orders",
+        "description": "Get recent options orders",
+        "category": "options"
+      },
+      {
+        "name": "get_options_instruments",
+        "description": "Get available options contracts for a symbol",
+        "category": "options",
+        "parameters": {
+          "symbol": {"type": "string", "description": "Stock symbol to get options for"}
+        }
+      }
+    ]
+  },
+  "usage_examples": {
+    "check_portfolio": {
+      "description": "Check your current portfolio status",
+      "tools": ["get_portfolio"],
+      "example": "Get my current portfolio summary"
+    },
+    "buy_stock": {
+      "description": "Buy shares of a stock",
+      "tools": ["buy_stock"],
+      "example": "Buy 10 shares of AAPL",
+      "parameters": {
+        "symbol": "AAPL",
+        "quantity": 10
+      }
+    },
+    "setup_automated_trading": {
+      "description": "Set up automated trading with stop-loss and take-profit",
+      "tools": ["add_bot_position", "start_bot"],
+      "example": "Monitor my AAPL position with 5% stop loss and 10% take profit",
+      "parameters": {
+        "symbol": "AAPL",
+        "quantity": 10,
+        "stop_loss": 5,
+        "take_profit": 10
+      }
+    },
+    "rebalance_portfolio": {
+      "description": "Rebalance your portfolio to target allocations",
+      "tools": ["rebalance_portfolio"],
+      "example": "Rebalance to 60% AAPL, 30% TSLA, 10% cash",
+      "parameters": {
+        "symbols": ["AAPL", "TSLA"],
+        "allocations": [0.6, 0.3],
+        "cash_buffer": 0.1
+      }
+    }
+  },
+  "safety_notes": [
+    "Always use paper trading mode (RH_PAPER=true) for testing",
+    "Start with small position sizes when using real money",
+    "Set appropriate stop-loss and take-profit levels",
+    "Monitor your positions regularly",
+    "Be aware of market hours and volatility"
+  ]
+}

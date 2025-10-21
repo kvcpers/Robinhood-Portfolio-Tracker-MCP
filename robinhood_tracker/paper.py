@@ -73,4 +73,16 @@ class PaperBroker:
         self._save()
         return {"symbol": symbol, "quantity": quantity, "side": "sell", "price": price}
 
+    def get_options_positions(self) -> Dict[str, Any]:
+        """Get mock options positions for paper trading"""
+        return {"results": []}  # No options in paper mode for now
+
+    def get_options_orders(self) -> Dict[str, Any]:
+        """Get mock options orders for paper trading"""
+        return {"results": []}  # No options orders in paper mode for now
+
+    def get_options_instruments(self, symbol: str) -> Dict[str, Any]:
+        """Get mock options instruments for paper trading"""
+        return {"results": []}  # No options instruments in paper mode for now
+
 

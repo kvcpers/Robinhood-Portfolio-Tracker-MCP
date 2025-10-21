@@ -99,10 +99,11 @@ class TradingBot:
             action = None
             reason = ""
             
-            # Check stop loss
-            if pct_change <= config.stop_loss_pct:
+            # Check stop loss (convert positive stop loss to negative)
+            stop_loss_threshold = config.stop_loss_pct if config.stop_loss_pct < 0 else -abs(config.stop_loss_pct)
+            if pct_change <= stop_loss_threshold:
                 action = "sell"
-                reason = f"Stop loss triggered: {pct_change:.2f}% <= {config.stop_loss_pct}%"
+                reason = f"Stop loss triggered: {pct_change:.2f}% <= {stop_loss_threshold}%"
             
             # Check take profit
             elif pct_change >= config.take_profit_pct:
@@ -131,7 +132,15 @@ class TradingBot:
             
         except Exception as e:
             print(f"Error checking position {symbol}: {e}")
-            return None
+            # Return position data with error state instead of None
+            return {
+                "symbol": symbol,
+                "action": "error",
+                "current_price": None,
+                "entry_price": config.entry_price,
+                "pct_change": None,
+                "reason": f"Error fetching quote: {str(e)}"
+            }
 
     def execute_trade(self, trade_info: Dict[str, Any]) -> bool:
         """Execute a trade based on bot decision"""
@@ -230,8 +239,17 @@ class TradingBot:
                     "last_check": config.last_check
                 })
             except Exception as e:
+                print(f"Error getting quote for {config.symbol}: {e}")
+                # Add position with error state
                 status["positions"].append({
                     "symbol": config.symbol,
+                    "quantity": config.quantity,
+                    "entry_price": config.entry_price,
+                    "current_price": None,
+                    "pct_change": None,
+                    "stop_loss": config.stop_loss_pct,
+                    "take_profit": config.take_profit_pct,
+                    "last_check": config.last_check,
                     "error": str(e)
                 })
         
